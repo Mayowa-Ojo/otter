@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Redirecting...</title>
+   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="flex items-center justify-center bg-gray-300">
+   <div class="w-full h-screen flex items-center justify-center">
+      <p class="text-lg text-gray-600 font-medium">Please wait...redirecting to heroku</p>
+      <a href="{{.authUrl}}" class="invisible"></a>
+   </div>
+</body>
+
+<script>
+   window.onload = function() {
+      const link = document.querySelector("a")
+      link.click()
+   }
+</script>
+</html>
