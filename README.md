@@ -1,4 +1,7 @@
 # Otter
+[![Open Source Love](https://badges.frapsoft.com/os/v3/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+
 
 > otter tries to extend features of the heroku cli to create new possibilities when handling your deployments.
 
