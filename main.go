@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/Mayowa-Ojo/escobar/cmd"
+	"github.com/Mayowa-Ojo/otter/cmd"
 )
 
 func main() {
