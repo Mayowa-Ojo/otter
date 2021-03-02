@@ -3,6 +3,7 @@ module github.com/Mayowa-Ojo/otter
 go 1.13
 
 require (
+	github.com/alexeyco/simpletable v0.0.0-20200730140406-5bb24159ccfb
 	github.com/goccy/go-yaml v1.8.9
 	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/gorilla/mux v1.8.0
