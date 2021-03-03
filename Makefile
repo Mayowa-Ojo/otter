@@ -8,7 +8,7 @@ serve:
 	go run web/main.go
 
 push:
-	git subtree push --prefix web/ heroku master
+	git push heroku master
 
 logs:
 	heroku logs --tail
