@@ -225,7 +225,7 @@ func newEnvConfig() *envConfig {
 	var config envConfig
 
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("[Error] --config: couldn't load env file - %s", err.Error())
+		log.Printf("[Error] --config: couldn't load env file - %s", err.Error())
 	}
 
 	config.Port = os.Getenv("PORT")
