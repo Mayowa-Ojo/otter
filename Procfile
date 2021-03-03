@@ -1,1 +1,1 @@
-web: bin/otter-server
+web: bin/otter-api-server
