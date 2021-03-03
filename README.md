@@ -20,3 +20,6 @@ $ otter config --app guarded-savannah-87990 --file env.yaml
 ```
 
 ### Installation
+#### Build from source
+
+#### Releases
