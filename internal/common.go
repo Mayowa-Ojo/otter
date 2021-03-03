@@ -145,7 +145,8 @@ func PersistAuthorization(at string, rt string) error {
 // UpdateAuthorization - get new access_token from refresh token
 func UpdateAuthorization(refreshToken string) (*TokenPair, error) {
 	var tokens TokenPair
-	uri := fmt.Sprintf("http://localhost:5000/auth/refresh")
+	// uri := fmt.Sprintf("http://localhost:5000/auth/refresh")
+	uri := fmt.Sprintf("https://otter-api-server.herokuapp.com/auth/refresh")
 
 	body, err := json.Marshal(map[string]interface{}{
 		"refresh_token": refreshToken,

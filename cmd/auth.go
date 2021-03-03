@@ -14,7 +14,8 @@ import (
 
 // AuthorizeClient - grant client access via heroku oauth
 func AuthorizeClient() error {
-	url := fmt.Sprintf("http://localhost:5000/auth")
+	// url := fmt.Sprintf("http://localhost:5000/auth")
+	url := fmt.Sprintf("https://otter-api-server.herokuapp.com/auth")
 	timeout := time.NewTimer(30 * time.Second)
 
 	if err := internal.OpenURLLink(url); err != nil {
