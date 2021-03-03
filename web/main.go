@@ -30,7 +30,7 @@ func main() {
 	r := mux.NewRouter()
 
 	srv := &http.Server{
-		Addr:         "127.0.0.1:" + config.Port,
+		Addr:         ":" + config.Port,
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
 		Handler:      r,
@@ -42,6 +42,10 @@ func main() {
 	r.HandleFunc("/auth/callback", handleOauthCallback(successTmpl)).Methods("GET")
 	r.HandleFunc("/auth/refresh", handleRefreshToken).Methods("POST")
 	r.HandleFunc("/auth", handleClientOauth(redirectTmpl)).Methods("GET")
+	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Up and running"))
+	}).Methods("GET")
 
 	fmt.Println("Starting web server...http://127.0.0.1:" + config.Port)
 
@@ -224,7 +228,7 @@ type envConfig struct {
 func newEnvConfig() *envConfig {
 	var config envConfig
 
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load(); err != nil && !os.IsNotExist(err) {
 		log.Printf("[Error] --config: couldn't load env file - %s", err.Error())
 	}
 
