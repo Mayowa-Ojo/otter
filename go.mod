@@ -13,3 +13,5 @@ require (
 	github.com/theckman/yacspin v0.8.0
 	github.com/urfave/cli/v2 v2.3.0
 )
+
+// +heroku install ./web/...
