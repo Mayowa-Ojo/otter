@@ -154,7 +154,7 @@ func UpsertVariables(app, token, path, source string) error {
 		return errors.New("error adding resource")
 	}
 
-	var data []map[string]interface{}
+	var data map[string]interface{}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

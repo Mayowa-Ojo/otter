@@ -128,18 +128,15 @@ func Execute() *cli.App {
 					}
 
 					if file := c.String("file"); c.IsSet("file") {
-						var source string
+						var source string = "env"
 
-						if strings.Contains(file, "env") {
-							source = "env"
-						}
-						if strings.Contains(file, "yaml") {
+						if strings.HasSuffix(file, ".yaml") {
 							source = "yaml"
 						}
-						if strings.Contains(file, "yml") {
+						if strings.HasSuffix(file, ".yml") {
 							source = "yaml"
 						}
-						if strings.Contains(file, "json") {
+						if strings.HasSuffix(file, ".json") {
 							source = "json"
 						}
 
