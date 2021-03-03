@@ -1,7 +1,10 @@
 # commands
 
-build:
-	rm -rf build/ && go build -o build/otter && cp .env build/.env
+build-cli:
+	rm -rf build/ && go build -o build/otter
+
+build-web:
+	rm -rf build/web/ && go build -o build/web/otter-web
 
 # start main server
 serve:
