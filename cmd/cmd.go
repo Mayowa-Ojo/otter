@@ -18,10 +18,35 @@ func Execute() *cli.App {
 				Name:    "auth",
 				Aliases: []string{"a"},
 				Usage:   "authorize otter with your heroku account",
-				Flags:   []cli.Flag{},
+				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:    "revoke",
+						Aliases: []string{"r"},
+						Usage:   "revoke your auth tokens",
+					},
+				},
 				Action: func(c *cli.Context) error {
-					fmt.Println("Opening browser - authorize otter client with your heroku account. \nWaiting for authorization...")
+					spinner, err := internal.LoadingSpinner()
+					if err != nil {
+						spinner.Prefix("something went wrong...")
+						spinner.StopFail()
 
+						return cli.Exit(err.Error(), 1)
+					}
+
+					if c.IsSet("revoke") {
+						spinner.Start()
+						if err := internal.RevokeAuthorization(); err != nil {
+							return cli.Exit(err.Error(), 1)
+						}
+
+						spinner.Prefix("Done")
+						return nil
+					}
+
+					fmt.Println("Opening browser - authorize otter client with your heroku account.")
+					spinner.Prefix("Waiting for authorization...")
+					spinner.Start()
 					if err := AuthorizeClient(); err != nil {
 						return cli.Exit(err.Error(), 1)
 					}
@@ -66,7 +91,7 @@ func Execute() *cli.App {
 					spinner, err := internal.LoadingSpinner()
 					spinner.Start()
 
-					token, err := internal.GetAuthTokens()
+					tokens, err := internal.GetAuthTokens()
 
 					if err != nil {
 						spinner.Prefix("something went wrong...")
@@ -75,12 +100,11 @@ func Execute() *cli.App {
 					}
 
 					if c.Bool("list") {
-						result, err := GetVariables(app, token)
+						result, err := GetVariables(app, tokens.AccessToken)
 						if err != nil {
 							return err
 						}
 
-						fmt.Printf("data: %+v", result)
 						spinner.Prefix("Done.")
 
 						spinner.Stop()
@@ -99,7 +123,6 @@ func Execute() *cli.App {
 							return err
 						}
 
-						fmt.Println("we got here\n")
 						fmt.Println(table.String())
 						return nil
 					}
@@ -120,7 +143,7 @@ func Execute() *cli.App {
 							source = "json"
 						}
 
-						if err := UpsertVariables(app, token, file, source); err != nil {
+						if err := UpsertVariables(app, tokens.AccessToken, file, source); err != nil {
 							return err
 						}
 
@@ -137,7 +160,7 @@ func Execute() *cli.App {
 							value,
 						}
 
-						if err := UpsertVariable(app, token, kv); err != nil {
+						if err := UpsertVariable(app, tokens.AccessToken, kv); err != nil {
 							return err
 						}
 
@@ -147,7 +170,7 @@ func Execute() *cli.App {
 					}
 
 					if key := c.String("remove"); c.IsSet("remove") {
-						if err := RemoveVariable(app, token, key); err != nil {
+						if err := RemoveVariable(app, tokens.AccessToken, key); err != nil {
 							return err
 						}
 
