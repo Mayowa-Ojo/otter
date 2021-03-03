@@ -40,6 +40,7 @@ func main() {
 	successTmpl := template.Must(template.ParseFiles("./web/templates/success.html"))
 
 	r.HandleFunc("/auth/callback", handleOauthCallback(successTmpl)).Methods("GET")
+	r.HandleFunc("/auth/refresh", handleRefreshToken).Methods("POST")
 	r.HandleFunc("/auth", handleClientOauth(redirectTmpl)).Methods("GET")
 
 	fmt.Println("Starting web server...http://127.0.0.1:" + config.Port)
@@ -80,7 +81,7 @@ func handleOauthCallback(tmpl *template.Template) func(http.ResponseWriter, *htt
 			return
 		}
 
-		// handle token exchangze
+		// handle token exchange
 		uri := fmt.Sprintf("https://id.heroku.com/oauth/token")
 
 		d := url.Values{}
@@ -144,6 +145,73 @@ func handleOauthCallback(tmpl *template.Template) func(http.ResponseWriter, *htt
 			return
 		}
 	}
+}
+
+func handleRefreshToken(w http.ResponseWriter, r *http.Request) {
+	var reqBody map[string]interface{}
+	uri := fmt.Sprintf("https://id.heroku.com/oauth/token")
+
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if err := json.Unmarshal(b, &reqBody); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if _, ok := reqBody["refresh_token"]; !ok {
+		http.Error(w, errors.New("msising field in request body").Error(), http.StatusBadRequest)
+		return
+	}
+
+	d := url.Values{}
+	d.Set("grant_type", "refresh_token")
+	d.Set("refresh_token", reqBody["refresh_token"].(string))
+	d.Set("client_secret", config.OauthSecret)
+
+	client := &http.Client{}
+
+	req, err := http.NewRequest("POST", uri, strings.NewReader(d.Encode()))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		http.Error(w, errors.New("authentication failed").Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var tokenData map[string]interface{}
+
+	b, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if err := json.Unmarshal(b, &tokenData); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if _, ok := tokenData["access_token"]; !ok {
+		http.Error(w, errors.New("authorization failed").Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(b)
 }
 
 type envConfig struct {
