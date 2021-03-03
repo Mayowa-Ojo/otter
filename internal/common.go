@@ -266,7 +266,7 @@ func ParseYAML(path string) (map[string]string, error) {
 		return nil, err
 	}
 
-	if err := yaml.Unmarshal(byt, out); err != nil {
+	if err := yaml.Unmarshal(byt, &out); err != nil {
 		return nil, err
 	}
 
