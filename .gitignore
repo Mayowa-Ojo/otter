@@ -1,4 +1,5 @@
 build/
 _*.md
 *.env
+env.yaml
 *.http
