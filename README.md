@@ -35,3 +35,11 @@ $ git clone https://github.com/Mayowa-Ojo/otter
 $ cd otter
 $ go install 
 ```
+
+#### Releases
+Linux
+```sh
+$ wget -P <path/to/downloads> https://github.com/Mayowa-Ojo/otter/releases/download/v0.1/otter.v0.1
+$ mv <path/to/downloads>/otter.v0.1 <$GOPATH>
+$ otter --help
+```
