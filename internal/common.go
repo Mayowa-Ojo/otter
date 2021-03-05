@@ -232,7 +232,7 @@ func RevokeAuthorization() error {
 // ParseEnv - convert env file to map structure
 // [path] - relative path to env file
 func ParseEnv(path string) (map[string]string, error) {
-	var out map[string]string
+	out := map[string]string{}
 
 	byt, err := ioutil.ReadFile(path)
 	if err != nil {
